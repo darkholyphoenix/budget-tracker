@@ -24,10 +24,10 @@ request.onerror = function(event) {
 function saveRecord(record) {
   const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-  const pizzaObjectStore = transaction.objectStore('new_transaction');
+  const budgetObjectStore = transaction.objectStore('new_transaction');
 
   // add record to your store with add method.
-  pizzaObjectStore.add(record);
+  budgetObjectStore.add(record);
 }
 
 function uploadTransaction() {
@@ -43,7 +43,7 @@ function uploadTransaction() {
   getAll.onsuccess = function() {
     // if there was data in indexedDb's store, let's send it to the api server
     if (getAll.result.length > 0) {
-      fetch('/api/transaction/bulk', {
+      fetch('/api/transaction/', {
         method: 'POST',
         body: JSON.stringify(getAll.result),
         headers: {
