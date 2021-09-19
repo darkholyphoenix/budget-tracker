@@ -1,9 +1,9 @@
 let db;
-const request = indexedDB.open('budget-tracker', 1);
+const request = indexedDB.open('budget', 1);
 
 request.onupgradeneeded = function(event) {
   const db = event.target.result;
-  db.createObjectStore('budget-tracker', { autoIncrement: true });
+  db.createObjectStore('Transaction', { autoIncrement: true });
 };
 
 request.onsuccess = function(event) {
@@ -22,9 +22,9 @@ request.onerror = function(event) {
 };
 
 function saveRecord(record) {
-  const transaction = db.transaction(['new_transaction'], 'readwrite');
+  const transaction = db.transaction(['Transaction'], 'readwrite');
 
-  const budgetObjectStore = transaction.objectStore('new_transaction');
+  const budgetObjectStore = transaction.objectStore('Transaction');
 
   // add record to your store with add method.
   budgetObjectStore.add(record);
@@ -32,10 +32,10 @@ function saveRecord(record) {
 
 function uploadTransaction() {
   // open a transaction on your pending db
-  const transaction = db.transaction(['new_transaction'], 'readwrite');
+  const transaction = db.transaction(['Transaction'], 'readwrite');
 
   // access your pending object store
-  const budgetObjectStore = transaction.objectStore('new_transaction');
+  const budgetObjectStore = transaction.objectStore('Transaction');
 
   // get all records from store and set to a variable
   const getAll = budgetObjectStore.getAll();
@@ -43,7 +43,7 @@ function uploadTransaction() {
   getAll.onsuccess = function() {
     // if there was data in indexedDb's store, let's send it to the api server
     if (getAll.result.length > 0) {
-      fetch('/api/transaction/', {
+      fetch('/api/transaction/bulk', {
         method: 'POST',
         body: JSON.stringify(getAll.result),
         headers: {
@@ -58,8 +58,8 @@ function uploadTransaction() {
             throw new Error(serverResponse);
           }
 
-          const transaction = db.transaction(['new_transaction'], 'readwrite');
-          const budgetObjectStore = transaction.objectStore('new_transaction');
+          const transaction = db.transaction(['Transaction'], 'readwrite');
+          const budgetObjectStore = transaction.objectStore('Transaction');
           // clear all items in your store
           budgetObjectStore.clear();
         })

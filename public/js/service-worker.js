@@ -1,7 +1,8 @@
-const CACHE_NAME = 'budget-tracker-cache-v1';
-const DATA_CACHE_NAME = 'budget-tracker-cache-v1';
+const CACHE_NAME = 'budget-v1';
+const DATA_CACHE_NAME = 'budget-cache-v1';
 
 const FILES_TO_CACHE = [
+  "./",
   '../index.html',
   '../manifest.json',
   '../css/style.css',
@@ -74,16 +75,16 @@ self.addEventListener('fetch', function(evt) {
     return;
   }
 
-  evt.respondWith(
-    fetch(evt.request).catch(function() {
-      return caches.match(evt.request).then(function(response) {
-        if (response) {
-          return response;
-        } else if (evt.request.headers.get('accept').includes('text/html')) {
-          // return the cached home page for all requests for html pages
-          return caches.match('/');
-        }
-      });
-    })
-  );
+  // evt.respondWith(
+  //   fetch(evt.request).catch(function() {
+  //     return caches.match(evt.request).then(function(response) {
+  //       if (response) {
+  //         return response;
+  //       } else if (evt.request.headers.get('accept').includes('text/html')) {
+  //         // return the cached home page for all requests for html pages
+  //         return caches.match('/');
+  //       }
+  //     });
+  //   })
+  // );
 });
